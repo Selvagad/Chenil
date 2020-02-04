@@ -25,11 +25,26 @@ def create(request):
         form = DogModelForm(request.POST)
         if form.is_valid():
             form.save()
-        # else:
-            # TODO gerer le rendu des erreurs
+
         # reset la page
         return redirect('/managedog')
 
 def delete(request, dog_pk):
     Dog.objects.get(id=dog_pk).delete()
     return redirect('/managedog/')
+
+def edit(request,dog_pk):
+    if request.method == "GET":
+        template = loader.get_template('managedog/edit.html')
+        dog = Dog.objects.get(id=dog_pk)
+        form = DogModelForm(instance=dog)
+        context = {"form": form,"dog": dog}
+
+        return HttpResponse(template.render(context,request))
+    else:
+        instance = get_object_or_404(Dog, id=dog_pk)
+        form = DogModelForm(request.POST,instance=instance)
+        if form.is_valid():
+            form.save()
+
+        return redirect('/managedog')
