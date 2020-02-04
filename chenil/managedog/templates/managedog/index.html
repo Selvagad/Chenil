@@ -7,5 +7,29 @@
 
 <body>
     Hello World !
+
+    <h1><a href="{% url 'create' %}" >Ajouter une valeur</a></h1>
+    <br>
+    <table>
+        <tbody>
+            <tr>
+                <td>id</td>
+                <td>Nom</td>
+                <td>Matricule</td>
+                <td>Maître</td>
+            </tr>
+            {%for dog in dogs%}
+            <tr>
+                <td>{{dog.id}}</td>
+                <td>{{dog.name}}</td>
+                <td>{{dog.id_num}}</td>
+                <td>{{dog.dog_master}}</td>
+                <td><a href="">Détails</a></td>
+                <td><a href="edit/{{r.id}}">Editer</a></td>
+                <td><a href="delete/{{r.id}}">Supprimer</a></td>
+            </tr>
+            {%endfor%}
+        </tbody>
+    </table>
 </body>
 </html>
