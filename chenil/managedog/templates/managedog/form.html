@@ -9,8 +9,9 @@
     <!-- va chercher la vue lié à ce name dans urls.py -->
     <form method="post" action="{% url 'create' %}">
         {% csrf_token %}
+        <h4><a href="{% url 'index' %}" >Retour</a></h4> <br>
         {{form}}
-        <input type="submit" value="Submit">
+        <input type="submit" value="Valider">
     </form>
    
 </body>
