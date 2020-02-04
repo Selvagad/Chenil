@@ -29,3 +29,7 @@ def create(request):
             # TODO gerer le rendu des erreurs
         # reset la page
         return redirect('/managedog')
+
+def delete(request, dog_pk):
+    Dog.objects.get(id=dog_pk).delete()
+    return redirect('/managedog/')
