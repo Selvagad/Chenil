@@ -33,6 +33,15 @@ def delete(request, dog_pk):
     Dog.objects.get(id=dog_pk).delete()
     return redirect('/managedog/')
 
+def details(request, dog_pk):
+    template = loader.get_template('managedog/details.html')
+    dog = Dog.objects.get(id=dog_pk)
+    form = DogModelForm(instance=dog)
+    context = {"form": form,"dog": dog}
+
+    return HttpResponse(template.render(context,request))
+
+
 def edit(request,dog_pk):
     if request.method == "GET":
         template = loader.get_template('managedog/edit.html')
