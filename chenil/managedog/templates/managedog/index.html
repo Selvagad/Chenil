@@ -9,7 +9,7 @@
     {% if user.is_authenticated %}
     <div class="row">
      <div class="col-md-10 col-xs-10 col-sm-10">
-      <p> Welcome <bold> {{ user.get_username }} </bold></br>
+      <p> Bienvenue <bold> {{ user.get_username }} </bold></br>
       </p>
      </div>
      <div class="col-md-2 col-xs-1 col-sm-1">
@@ -20,7 +20,7 @@
     {% else %}
      <div class="row">
         <div class="col-md-10  col-xs-10 col-sm-10">
-          <p>Vous devez vous connecter pour accéder aux fonctionnalités</p>
+          <p>Vous devez vous connecter pour ajouter ou éditer des chiens</p>
         </div>
      </div>
    {% endif %}
@@ -28,12 +28,11 @@
    {% if user.is_authenticated %}
     <li>User: {{ user.get_username }}</li>
     <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+    <h1><a href="{% url 'create' %}" >Ajouter un chien</a></h1>
     {% else %}
     <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
     {% endif %}
 
-    <h1><a href="{% url 'create' %}" >Ajouter une valeur</a></h1>
-    <a href="{% url 'login'%}?next={{request.path}}">Login</a>
     <br>
     <table>
         <tbody>
@@ -50,8 +49,10 @@
                 <td>{{dog.num_id}}</td>
                 <td>{{dog.dog_master}}</td>
                 <td><a href="details/{{dog.id}}">Détails</a></td>
-                <td><a href="edit/{{dog.id}}">Editer</a></td>
-                <td><a href="delete/{{dog.id}}">Supprimer</a></td>
+                {% if user.is_authenticated %}
+                    <td><a href="edit/{{dog.id}}">Editer</a></td>
+                    <td><a href="delete/{{dog.id}}">Supprimer</a></td>
+                {% endif %}
             </tr>
             {%endfor%}
         </tbody>

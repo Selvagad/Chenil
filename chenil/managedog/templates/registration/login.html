@@ -18,6 +18,9 @@
             <td>{{ form.password }}</td>
         </tr>
         </table>
+        {% if form.errors %}
+         <p>Erreur: login ou mot de passe incorrect</p>
+        {% endif %}
         <input type="submit" value="login" />
         <input type="hidden" name="next" value="{{ next }}" />
     </form>

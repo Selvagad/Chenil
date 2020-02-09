@@ -16,22 +16,29 @@ def index(request):
     return HttpResponse(template.render(context,request))
 
 def create(request):
-    if request.method == 'GET':
-        form = DogModelForm()
-        context = {"form": form}
-        template = loader.get_template('managedog/form.html')
-        return HttpResponse(template.render(context,request))
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            form = DogModelForm()
+            context = {"form": form}
+            template = loader.get_template('managedog/form.html')
+            return HttpResponse(template.render(context,request))
+        else:
+            form = DogModelForm(request.POST)
+            if form.is_valid():
+                form.save()
+            # reset la page
+            return redirect('/')
     else:
-        form = DogModelForm(request.POST)
-        if form.is_valid():
-            form.save()
+        return HttpResponse('<h1>Vous devez être connecté pour créer un chien</h1>')
 
-        # reset la page
-        return redirect('/managedog')
 
 def delete(request, dog_pk):
-    Dog.objects.get(id=dog_pk).delete()
-    return redirect('/managedog/')
+    if request.user.is_authenticated:
+        Dog.objects.get(id=dog_pk).delete()
+        return redirect('/')
+    else:
+        return HttpResponse('<h1>Vous devez être connecté pour supprimer un chien</h1>')
+        
 
 def details(request, dog_pk):
     template = loader.get_template('managedog/details.html')
@@ -43,17 +50,20 @@ def details(request, dog_pk):
 
 
 def edit(request,dog_pk):
-    if request.method == "GET":
-        template = loader.get_template('managedog/edit.html')
-        dog = Dog.objects.get(id=dog_pk)
-        form = DogModelForm(instance=dog)
-        context = {"form": form,"dog": dog}
+    if request.user.is_authenticated:
+        if request.method == "GET":
+            template = loader.get_template('managedog/edit.html')
+            dog = Dog.objects.get(id=dog_pk)
+            form = DogModelForm(instance=dog)
+            context = {"form": form,"dog": dog}
 
-        return HttpResponse(template.render(context,request))
+            return HttpResponse(template.render(context,request))
+        else:
+            instance = get_object_or_404(Dog, id=dog_pk)
+            form = DogModelForm(request.POST,instance=instance)
+            if form.is_valid():
+                form.save()
+
+            return redirect('/')
     else:
-        instance = get_object_or_404(Dog, id=dog_pk)
-        form = DogModelForm(request.POST,instance=instance)
-        if form.is_valid():
-            form.save()
-
-        return redirect('/managedog')
+        return HttpResponse('<h1>Vous devez être connecté pour éditer un chien</h1>')
